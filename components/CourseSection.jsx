@@ -1,10 +1,15 @@
 "use client";
 import { useState, useEffect } from "react";
+import Link from "next/link";
+import { Download } from "lucide-react";
+import CourseDetailModal from "./CourseDetailModal";
 
 const CoursePage = () => {
   const [activeTab, setActiveTab] = useState("all");
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -24,36 +29,22 @@ const CoursePage = () => {
             id: 1,
             title: "Operator Penyambungan Pipa Polyethylene",
             category: "penyambungan",
-            objectives: [
-              "Menerapkan Keselamatan dan Kesehatan Kerja dan Lingkungan di Tempat Kerja",
-              "Membaca Gambar Teknik",
-              "Mengukur Dengan Menggunakan Alat ukur",
-              "Menyambung Pipa dengan metode Butt Fusion (BF)",
-              "Menyambung Pipa dengan metode Electro Fusion (EF)",
-            ],
+            competencies:
+              "Menerapkan Keselamatan dan Kesehatan Kerja dan Lingkungan di Tempat Kerja\nMembaca Gambar Teknik\nMengukur Dengan Menggunakan Alat ukur\nMenyambung Pipa dengan metode Butt Fusion (BF)\nMenyambung Pipa dengan metode Electro Fusion (EF)",
           },
           {
             id: 2,
             title: "Operator Penyambungan Pipa Galvanis",
             category: "penyambungan",
-            objectives: [
-              "Menerapkan Keselamatan dan Kesehatan Kerja dan Lingkungan di Tempat Kerja",
-              "Membaca Gambar Teknik",
-              "Mengukur Dengan Menggunakan Alat ukur",
-              "Menyambung Pipa Galvanis",
-            ],
+            competencies:
+              "Menerapkan Keselamatan dan Kesehatan Kerja dan Lingkungan di Tempat Kerja\nMembaca Gambar Teknik\nMengukur Dengan Menggunakan Alat ukur\nMenyambung Pipa Galvanis",
           },
           {
             id: 3,
             title: "Pemeriksa Mutu Kontruksi Pipa Polyethylene (PE)",
             category: "inspeksi",
-            objectives: [
-              "Menerapakan Keselamatan dan Kesehatan Kerja dan Lingkungan di Tempat Kerja",
-              "Membaca Gambar Teknik",
-              "Mengukur Dengan Menggunakan Alat ukur",
-              "Memeriksa Mutu Pemasangan Pipa Instalasi Gas Bumi Material Pipa Galvanis dan Pipa Multilayer",
-              "Membuat Laporan Pemasangan Pipa",
-            ],
+            competencies:
+              "Menerapakan Keselamatan dan Kesehatan Kerja dan Lingkungan di Tempat Kerja\nMembaca Gambar Teknik\nMengukur Dengan Menggunakan Alat ukur\nMemeriksa Mutu Pemasangan Pipa Instalasi Gas Bumi Material Pipa Galvanis dan Pipa Multilayer\nMembuat Laporan Pemasangan Pipa",
           },
         ]);
       } finally {
@@ -96,10 +87,33 @@ const CoursePage = () => {
       ? courses
       : courses.filter((course) => course.category === activeTab);
 
+  const handleDownloadBrochure = (brochureUrl, courseTitle) => {
+    if (brochureUrl) {
+      const link = document.createElement("a");
+      link.href = brochureUrl;
+      link.download = `brosur-${courseTitle
+        .replace(/\s+/g, "-")
+        .toLowerCase()}.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
+  const handleViewDetail = (course) => {
+    setSelectedCourse(course);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedCourse(null);
+  };
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8 md:py-16">
-        <div className="container mx-auto px-4 md:px-6 lg:px-8">
+      <div className="min-h-screen bg-gray-50 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
             <p className="mt-4 text-gray-600">Memuat program pelatihan...</p>
@@ -110,165 +124,114 @@ const CoursePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 md:py-16">
-      {/* Hero Section */}
-      <div className="relative bg-gradient-to-r from-blue-900 to-blue-700 text-white py-12 md:py-20">
-        <div className="container mx-auto px-4 md:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6">
-              KEGIATAN PELATIHAN DAN SERTIFIKASI BIDANG GAS BUMI
-            </h1>
-            <p className="text-base md:text-lg text-blue-100 max-w-3xl mx-auto px-4">
-              Program sertifikasi kompetensi sesuai standar (SKKNI) untuk
-              mengembangkan SDM profesional di bidang gas bumi Indonesia
+    <div className="min-h-screen bg-gray-50 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            Program Pelatihan
+          </h1>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Pilih program pelatihan yang sesuai dengan kebutuhan Anda
+          </p>
+        </div>
+
+        {/* Program Counter */}
+        <div className="text-center mb-8">
+          <p className="text-gray-600">
+            Menampilkan{" "}
+            <span className="text-blue-600 font-semibold">
+              {filteredCourses.length}
+            </span>{" "}
+            dari {courses.length} program pelatihan
+          </p>
+        </div>
+
+        {/* Course Cards */}
+        <div className="space-y-6">
+          {filteredCourses.map((course) => {
+            const competencies = course.competencies
+              ? course.competencies.split("\n").filter((item) => item.trim())
+              : [];
+
+            return (
+              <div
+                key={course.id}
+                className="bg-white rounded-lg shadow-lg p-8 max-w-4xl mx-auto"
+              >
+                {/* Course Title */}
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                  {course.title}
+                </h2>
+
+                {/* Competencies Section */}
+                {competencies.length > 0 && (
+                  <div className="mb-8">
+                    <h3 className="text-base font-normal text-gray-800 mb-4">
+                      Kompetensi yang Dicapai:
+                    </h3>
+                    <ul className="space-y-2">
+                      {competencies.map((competency, index) => (
+                        <li
+                          key={index}
+                          className="flex items-start space-x-3 text-gray-700"
+                        >
+                          <div className="w-[6px] h-[6px] bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                          <span>{competency}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Action Buttons */}
+                <div className="flex space-x-4">
+                  <button
+                    onClick={() => handleViewDetail(course)}
+                    className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors text-center"
+                  >
+                    Lihat Detail
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Empty State */}
+        {filteredCourses.length === 0 && (
+          <div className="text-center py-12">
+            <div className="text-gray-400 mb-4">
+              <svg
+                className="mx-auto h-12 w-12"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                />
+              </svg>
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              Tidak ada program pelatihan
+            </h3>
+            <p className="text-gray-600">
+              Program pelatihan akan segera tersedia.
             </p>
           </div>
-        </div>
+        )}
       </div>
 
-      {/* Tabs */}
-      <div className="py-4 md:py-8 bg-white border-b border-gray-200">
-        <div className="container mx-auto px-4 md:px-6 lg:px-8">
-          <div className="flex flex-wrap justify-center gap-2 md:gap-4">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`px-3 py-2 md:px-6 md:py-3 rounded-lg font-medium text-xs md:text-base transition-all duration-300 ${
-                  activeTab === tab.id
-                    ? "bg-blue-600 text-white shadow-lg"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
-              >
-                <span className="block md:inline">{tab.name}</span>
-                <span className="ml-1 md:ml-2 px-1.5 py-0.5 md:px-2 md:py-1 text-xs rounded-full bg-white/20">
-                  {tab.count}
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Course List */}
-      <div className="py-8 md:py-16">
-        <div className="container mx-auto px-4 md:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto">
-            {/* Results Count */}
-            <div className="mb-6 md:mb-8 text-center">
-              <p className="text-gray-600 text-sm md:text-base">
-                Menampilkan{" "}
-                <span className="font-semibold text-blue-600">
-                  {filteredCourses.length}
-                </span>{" "}
-                dari <span className="font-semibold">{courses.length}</span>{" "}
-                program pelatihan
-              </p>
-            </div>
-
-            {filteredCourses.length > 0 ? (
-              <div className="space-y-6 md:space-y-8">
-                {filteredCourses.map((course) => (
-                  <div
-                    key={course.id}
-                    className="bg-white rounded-lg shadow-lg p-6 md:p-8 hover:shadow-xl transition-shadow duration-300"
-                  >
-                    <div className="flex items-start justify-between mb-3 md:mb-4">
-                      <h3 className="text-lg md:text-2xl font-bold text-gray-900 leading-tight flex-1">
-                        {course.title}
-                      </h3>
-                      <span className="ml-4 px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
-                        {course.category}
-                      </span>
-                    </div>
-
-                    {course.shortTitle && (
-                      <p className="text-gray-600 mb-3 md:mb-4 text-sm md:text-base">
-                        {course.shortTitle}
-                      </p>
-                    )}
-
-                    {course.description && (
-                      <p className="text-gray-700 mb-4 md:mb-6 leading-relaxed text-sm md:text-base">
-                        {course.description}
-                      </p>
-                    )}
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 md:mb-6">
-                      {course.duration && (
-                        <div className="flex items-center text-sm text-gray-600">
-                          <span className="font-medium mr-2">Durasi:</span>
-                          <span>{course.duration}</span>
-                        </div>
-                      )}
-                      {course.price && (
-                        <div className="flex items-center text-sm text-gray-600">
-                          <span className="font-medium mr-2">Biaya:</span>
-                          <span>Rp {course.price.toLocaleString()}</span>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div className="mt-4 md:mt-6 flex flex-col sm:flex-row gap-3">
-                      <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 md:py-3 px-4 md:px-6 rounded-lg transition-colors duration-300 text-sm md:text-base">
-                        Lihat Detail
-                      </button>
-                      <button className="flex-1 border border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold py-2 md:py-3 px-4 md:px-6 rounded-lg transition-colors duration-300 text-sm md:text-base">
-                        Daftar Sekarang
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <div className="text-gray-400 mb-4">
-                  <svg
-                    className="w-16 h-16 mx-auto"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                    />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  Tidak ada program yang ditemukan
-                </h3>
-                <p className="text-gray-500">
-                  Coba pilih kategori lain atau hubungi kami untuk informasi
-                  lebih lanjut.
-                </p>
-              </div>
-            )}
-
-            {/* CTA Section */}
-            <div className="mt-8 md:mt-16 text-center bg-blue-50 rounded-lg p-6 md:p-8">
-              <h3 className="text-lg md:text-2xl font-bold text-gray-900 mb-3 md:mb-4">
-                Tidak Menemukan Program yang Sesuai?
-              </h3>
-              <p className="text-gray-600 mb-4 md:mb-6 text-sm md:text-base max-w-2xl mx-auto">
-                Hubungi kami untuk konsultasi program pelatihan yang sesuai
-                dengan kebutuhan Anda
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300 text-sm md:text-base">
-                  Konsultasi Gratis
-                </button>
-                <button className="border border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold py-3 px-6 rounded-lg transition-colors duration-300 text-sm md:text-base">
-                  Download Brosur
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Course Detail Modal */}
+      <CourseDetailModal
+        course={selectedCourse}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+      />
     </div>
   );
 };

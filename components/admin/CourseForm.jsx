@@ -7,26 +7,83 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Upload, X, FileText } from "lucide-react";
 
 export default function CourseForm({ course = null }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [brochureFile, setBrochureFile] = useState(null);
+  const [brochurePreview, setBrochurePreview] = useState(
+    course?.brochure || null
+  );
   const [formData, setFormData] = useState({
     title: course?.title || "",
     shortTitle: course?.shortTitle || "",
     description: course?.description || "",
     duration: course?.duration || "",
-    price: course?.price || 0,
+    price: course?.price || "",
+    competencies: course?.competencies || "",
     category: course?.category || "TRAINING",
     isActive: course?.isActive !== undefined ? course.isActive : true,
   });
+
+  const handleBrochureChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith("image/")) {
+        alert("File harus berupa gambar");
+        return;
+      }
+
+      // Validate file size (max 10MB for brochure)
+      if (file.size > 10 * 1024 * 1024) {
+        alert("Ukuran file maksimal 10MB");
+        return;
+      }
+
+      setBrochureFile(file);
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setBrochurePreview(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeBrochure = () => {
+    setBrochureFile(null);
+    setBrochurePreview(null);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
+      let brochureUrl = course?.brochure || null;
+
+      // Upload brochure if there's a new file
+      if (brochureFile) {
+        const formDataBrochure = new FormData();
+        formDataBrochure.append("photo", brochureFile);
+
+        const uploadResponse = await fetch("/api/upload", {
+          method: "POST",
+          body: formDataBrochure,
+        });
+
+        if (uploadResponse.ok) {
+          const uploadResult = await uploadResponse.json();
+          brochureUrl = uploadResult.url;
+        } else {
+          throw new Error("Gagal upload brosur");
+        }
+      }
+
       const url = course ? `/api/courses/${course.id}` : "/api/courses";
       const method = course ? "PUT" : "POST";
 
@@ -37,7 +94,8 @@ export default function CourseForm({ course = null }) {
         },
         body: JSON.stringify({
           ...formData,
-          price: parseInt(formData.price),
+          price: formData.price ? parseInt(formData.price) : null,
+          brochure: brochureUrl,
         }),
       });
 
@@ -112,7 +170,7 @@ export default function CourseForm({ course = null }) {
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                placeholder="Judul lengkap kursus"
+                placeholder="Judul kursus"
                 required
               />
             </div>
@@ -124,51 +182,69 @@ export default function CourseForm({ course = null }) {
                 name="shortTitle"
                 value={formData.shortTitle}
                 onChange={handleChange}
-                placeholder="Judul singkat untuk tampilan"
+                placeholder="Judul singkat"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Deskripsi *</Label>
+            <Label htmlFor="competencies">Kompetensi yang Dicapai</Label>
             <Textarea
-              id="description"
-              name="description"
-              value={formData.description}
+              id="competencies"
+              name="competencies"
+              value={formData.competencies}
               onChange={handleChange}
-              placeholder="Deskripsi lengkap kursus"
-              rows={4}
-              required
+              placeholder="Masukkan kompetensi yang akan dicapai (satu per baris)"
+              rows={6}
             />
+            <p className="text-sm text-gray-500">
+              Masukkan setiap kompetensi dalam baris terpisah
+            </p>
+          </div>
+
+          {/* Brochure Upload Section */}
+          <div className="space-y-4">
+            <Label>Brosur</Label>
+            <div className="flex items-center space-x-4">
+              {brochurePreview ? (
+                <div className="relative">
+                  <img
+                    src={brochurePreview}
+                    alt="Brochure Preview"
+                    className="w-32 h-40 object-cover rounded-lg border"
+                  />
+                  <button
+                    type="button"
+                    onClick={removeBrochure}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ) : (
+                <div className="w-32 h-40 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center">
+                  <FileText className="w-8 h-8 text-gray-400 mb-2" />
+                  <span className="text-xs text-gray-400 text-center">
+                    Brosur
+                  </span>
+                </div>
+              )}
+
+              <div className="flex-1">
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleBrochureChange}
+                  className="cursor-pointer"
+                />
+                <p className="text-sm text-gray-500 mt-1">
+                  Format: JPG, PNG, GIF. Maksimal 10MB
+                </p>
+              </div>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="space-y-2">
-              <Label htmlFor="duration">Durasi</Label>
-              <Input
-                id="duration"
-                name="duration"
-                value={formData.duration}
-                onChange={handleChange}
-                placeholder="Contoh: 2 hari, 16 jam"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="price">Harga (Rp) *</Label>
-              <Input
-                id="price"
-                name="price"
-                type="number"
-                value={formData.price}
-                onChange={handleChange}
-                placeholder="0"
-                min="0"
-                step="1000"
-                required
-              />
-            </div>
-
             <div className="space-y-2">
               <Label htmlFor="category">Kategori *</Label>
               <select
@@ -180,10 +256,9 @@ export default function CourseForm({ course = null }) {
                 required
               >
                 <option value="TRAINING">Training</option>
+                <option value="CERTIFICATION">Sertifikasi</option>
                 <option value="WORKSHOP">Workshop</option>
                 <option value="SEMINAR">Seminar</option>
-                <option value="CERTIFICATION">Sertifikasi</option>
-                <option value="OTHER">Lainnya</option>
               </select>
             </div>
           </div>

@@ -20,17 +20,15 @@ model User {
 }
 
 model Course {
-  id          String     @id @default(cuid())
-  title       String     @db.VarChar(500)
-  shortTitle  String     @unique @db.VarChar(50)
-  description String?    @db.Text
-  duration    String     @db.VarChar(100)
-  category    String     @db.VarChar(100)
-  price       Float?
-  isActive    Boolean    @default(true)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  schedules   Schedule[]
+  id           String     @id @default(cuid())
+  title        String     @db.VarChar(500)
+  competencies String?    @db.Text
+  brochure     String?    @db.VarChar(500)
+  category     String     @db.VarChar(100)
+  isActive     Boolean    @default(true)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  schedules    Schedule[]
 
   @@map("courses")
 }
@@ -86,5 +84,6 @@ enum Status {
   OPEN
   LIMITED
   FULL
+  CLOSED
   CANCELLED
 }

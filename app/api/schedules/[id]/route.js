@@ -78,12 +78,16 @@ export async function PUT(request, { params }) {
     if (validatedData.time !== undefined) updateData.time = validatedData.time;
     if (validatedData.location !== undefined)
       updateData.location = validatedData.location;
-    if (validatedData.maxSeats !== undefined)
-      updateData.seats = validatedData.maxSeats;
-    if (validatedData.availableSeats !== undefined)
-      updateData.available = validatedData.availableSeats;
+    if (validatedData.seats !== undefined)
+      updateData.seats = validatedData.seats;
+    if (validatedData.available !== undefined)
+      updateData.available = validatedData.available;
     if (validatedData.status !== undefined)
       updateData.status = validatedData.status;
+    if (validatedData.color !== undefined)
+      updateData.color = validatedData.color;
+    if (validatedData.textColor !== undefined)
+      updateData.textColor = validatedData.textColor;
 
     // Update schedule
     const schedule = await prisma.schedule.update({
@@ -94,10 +98,7 @@ export async function PUT(request, { params }) {
           select: {
             id: true,
             title: true,
-            shortTitle: true,
-            description: true,
-            duration: true,
-            price: true,
+            competencies: true,
             category: true,
           },
         },

@@ -18,7 +18,6 @@ export async function GET(request) {
           select: {
             id: true,
             title: true,
-            shortTitle: true,
             category: true,
           },
         },
@@ -48,6 +47,28 @@ export async function POST(request) {
   try {
     const body = await request.json();
 
+    // Debug logging
+    console.log("=== API RECEIVED DATA ===");
+    console.log("Received body:", body);
+    console.log("Body type:", typeof body);
+    console.log("Body keys:", Object.keys(body));
+    console.log("Seats value:", body.seats, "Type:", typeof body.seats);
+    console.log(
+      "Available value:",
+      body.available,
+      "Type:",
+      typeof body.available
+    );
+    console.log("Raw body string:", JSON.stringify(body));
+
+    // Check if seats and available are missing
+    if (body.seats === undefined) {
+      console.error("ERROR: seats is undefined in request body");
+    }
+    if (body.available === undefined) {
+      console.error("ERROR: available is undefined in request body");
+    }
+
     // Validate request body
     const validatedData = scheduleCreateSchema.parse(body);
 
@@ -65,17 +86,17 @@ export async function POST(request) {
         endDate,
         time: validatedData.time,
         location: validatedData.location,
-        seats: validatedData.maxSeats,
-        available: validatedData.availableSeats,
+        seats: validatedData.seats,
+        available: validatedData.available,
         status: validatedData.status,
-        description: validatedData.description,
+        color: validatedData.color,
+        textColor: validatedData.textColor,
       },
       include: {
         course: {
           select: {
             id: true,
             title: true,
-            shortTitle: true,
             category: true,
           },
         },
@@ -84,6 +105,7 @@ export async function POST(request) {
 
     return apiResponse(201, schedule, "Schedule created successfully");
   } catch (error) {
+    console.error("Schedule creation error:", error);
     return handleApiError(error);
   }
 }

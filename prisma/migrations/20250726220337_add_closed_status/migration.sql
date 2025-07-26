@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `schedules` MODIFY `status` ENUM('OPEN', 'LIMITED', 'FULL', 'CLOSED', 'CANCELLED') NOT NULL DEFAULT 'OPEN';
