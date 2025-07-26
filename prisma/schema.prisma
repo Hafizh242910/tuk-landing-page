@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique @db.VarChar(255)
+  name      String   @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Course {
+  id          String     @id @default(cuid())
+  title       String     @db.VarChar(500)
+  shortTitle  String     @unique @db.VarChar(50)
+  description String?    @db.Text
+  duration    String     @db.VarChar(100)
+  category    String     @db.VarChar(100)
+  price       Float?
+  isActive    Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  schedules   Schedule[]
+
+  @@map("courses")
+}
+
+model Schedule {
+  id        String   @id @default(cuid())
+  courseId  String
+  startDate DateTime
+  endDate   DateTime
+  time      String   @db.VarChar(100)
+  location  String   @db.VarChar(255)
+  seats     Int
+  available Int
+  status    Status   @default(OPEN)
+  color     String?  @db.VarChar(7)
+  textColor String?  @db.VarChar(7)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@index([courseId], map: "schedules_courseId_fkey")
+  @@map("schedules")
+}
+
+model OrganizationalStructure {
+  id          String                    @id @default(cuid())
+  name        String                    @db.VarChar(255)
+  position    String                    @db.VarChar(255)
+  department  String?                   @db.VarChar(255)
+  level       Int
+  parentId    String?
+  imageUrl    String?                   @db.VarChar(500)
+  photo       String?                   @db.VarChar(500)
+  email       String?                   @db.VarChar(255)
+  phone       String?                   @db.VarChar(50)
+  description String?                   @db.Text
+  isActive    Boolean                   @default(true)
+  createdAt   DateTime                  @default(now())
+  updatedAt   DateTime                  @updatedAt
+  parent      OrganizationalStructure?  @relation("OrgHierarchy", fields: [parentId], references: [id])
+  children    OrganizationalStructure[] @relation("OrgHierarchy")
+
+  @@index([parentId], map: "organizational_structures_parentId_fkey")
+  @@map("organizational_structures")
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum Status {
+  OPEN
+  LIMITED
+  FULL
+  CANCELLED
+}
