@@ -49,8 +49,8 @@ async function getAdminUser() {
 }
 
 export const metadata = {
-  title: "Admin Dashboard - Mega Citra Wisata",
-  description: "Panel administrasi untuk Mega Citra Wisata",
+  title: "Admin Dashboard - TUK PGAS SOLUTION",
+  description: "Panel administrasi untuk TUK PGAS SOLUTION",
 };
 
 export default async function AdminLayout({ children }) {
@@ -82,7 +82,7 @@ export default async function AdminLayout({ children }) {
 
   return (
     <html lang="id">
-      <body className="min-h-screen bg-gray-50">
+      <body className="min-h-screen bg-gray-50" suppressHydrationWarning>
         <div className="flex h-screen">
           <AdminSidebar />
           <div className="flex-1 flex flex-col overflow-hidden">

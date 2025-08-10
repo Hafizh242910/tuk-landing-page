@@ -15,11 +15,13 @@ const FullCalendarSchedule = ({ schedules = [] }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewMode, setViewMode] = useState("dayGridMonth");
 
+  console.log("FullCalendarSchedule received schedules:", schedules);
+
   // Convert schedules to FullCalendar events format
   const events = schedules.map((schedule) => {
     const available = schedule.available;
     const total = schedule.seats;
-    console.log(schedule);
+    console.log("Processing schedule:", schedule);
 
     // Use status from backend, fallback to calculated status if not set
     let status = schedule.status || "OPEN";
@@ -53,7 +55,7 @@ const FullCalendarSchedule = ({ schedules = [] }) => {
         backgroundColor = schedule.color;
     }
 
-    return {
+    const event = {
       id: schedule.id,
       title: `${
         schedule.course?.shortTitle || schedule.course?.title
@@ -71,7 +73,12 @@ const FullCalendarSchedule = ({ schedules = [] }) => {
       textColor: textColor,
       borderColor: backgroundColor,
     };
+
+    console.log("Created event:", event);
+    return event;
   });
+
+  console.log("Final events array:", events);
 
   const handleEventClick = (clickInfo) => {
     const schedule = clickInfo.event.extendedProps.schedule;

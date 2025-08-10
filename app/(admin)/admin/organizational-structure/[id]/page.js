@@ -29,7 +29,8 @@ async function getOrganizationalStructure(id) {
 }
 
 export default async function OrganizationalStructureDetailPage({ params }) {
-  const structure = await getOrganizationalStructure(params.id);
+  const { id } = await params;
+  const structure = await getOrganizationalStructure(id);
 
   return (
     <div className="space-y-6">

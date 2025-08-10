@@ -2,7 +2,7 @@ import ScheduleSection from "@/components/ScheduleSection";
 
 const SchedulePage = () => {
   return (
-    <div>
+    <div className="pt-36 bg-gray-50">
       <ScheduleSection />
     </div>
   );

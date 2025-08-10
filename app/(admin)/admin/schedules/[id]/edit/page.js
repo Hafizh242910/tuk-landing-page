@@ -15,7 +15,8 @@ async function getSchedule(id) {
 }
 
 export default async function EditSchedulePage({ params }) {
-  const schedule = await getSchedule(params.id);
+  const { id } = await params;
+  const schedule = await getSchedule(id);
 
   return (
     <div className="space-y-6">

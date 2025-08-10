@@ -15,10 +15,8 @@ async function getSchedule(id) {
         select: {
           id: true,
           title: true,
-          shortTitle: true,
-          description: true,
-          duration: true,
-          price: true,
+          competencies: true,
+          brochure: true,
           category: true,
         },
       },
@@ -45,7 +43,8 @@ function getStatusBadge(status) {
 }
 
 export default async function ScheduleDetailPage({ params }) {
-  const schedule = await getSchedule(params.id);
+  const { id } = await params;
+  const schedule = await getSchedule(id);
 
   return (
     <div className="space-y-6">
@@ -72,9 +71,7 @@ export default async function ScheduleDetailPage({ params }) {
                 <h2 className="text-2xl font-bold text-gray-900">
                   {schedule.course.title}
                 </h2>
-                <p className="text-gray-600 mt-1">
-                  {schedule.course.shortTitle}
-                </p>
+                <p className="text-gray-600 mt-1">{schedule.course.category}</p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -173,18 +170,26 @@ export default async function ScheduleDetailPage({ params }) {
                 </div>
                 <div>
                   <label className="text-sm font-medium text-gray-500">
-                    Durasi
+                    Kompetensi
                   </label>
-                  <p className="text-sm mt-1">{schedule.course.duration}</p>
+                  <p className="text-sm mt-1">
+                    {schedule.course.competencies
+                      ? schedule.course.competencies
+                          .split("\n")
+                          .slice(0, 2)
+                          .join(", ") +
+                        (schedule.course.competencies.split("\n").length > 2
+                          ? "..."
+                          : "")
+                      : "Tidak ada"}
+                  </p>
                 </div>
                 <div>
                   <label className="text-sm font-medium text-gray-500">
-                    Harga
+                    Brosur
                   </label>
                   <p className="text-sm mt-1">
-                    {schedule.course.price
-                      ? `Rp ${schedule.course.price.toLocaleString()}`
-                      : "Gratis"}
+                    {schedule.course.brochure ? "Tersedia" : "Tidak ada"}
                   </p>
                 </div>
               </div>

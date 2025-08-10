@@ -38,7 +38,8 @@ async function getCourse(id) {
 }
 
 export default async function CourseDetailPage({ params }) {
-  const course = await getCourse(params.id);
+  const { id } = await params;
+  const course = await getCourse(id);
   const competencies = course.competencies
     ? course.competencies.split("\n").filter((item) => item.trim())
     : [];

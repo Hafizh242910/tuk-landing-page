@@ -15,7 +15,8 @@ async function getCourse(id) {
 }
 
 export default async function EditCoursePage({ params }) {
-  const course = await getCourse(params.id);
+  const { id } = await params;
+  const course = await getCourse(id);
 
   return (
     <div className="space-y-6">

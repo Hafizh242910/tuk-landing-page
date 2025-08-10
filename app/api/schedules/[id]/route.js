@@ -75,6 +75,8 @@ export async function PUT(request, { params }) {
     }
 
     // Map form fields to database fields
+    if (validatedData.courseId !== undefined)
+      updateData.courseId = validatedData.courseId;
     if (validatedData.time !== undefined) updateData.time = validatedData.time;
     if (validatedData.location !== undefined)
       updateData.location = validatedData.location;

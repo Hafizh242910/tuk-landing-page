@@ -30,6 +30,10 @@ const navigation = [
 export default function AdminSidebar() {
   const pathname = usePathname();
 
+  const active = (href) => {
+    return pathname === href;
+  };
+
   const handleLogout = () => {
     // Clear localStorage
     if (typeof window !== "undefined") {
@@ -54,7 +58,7 @@ export default function AdminSidebar() {
       {/* Navigation */}
       <nav className="flex-1 px-4 py-6 space-y-2">
         {navigation.map((item) => {
-          const isActive = pathname === item.href;
+          const isActive = active(item.href);
           return (
             <Link
               key={item.name}

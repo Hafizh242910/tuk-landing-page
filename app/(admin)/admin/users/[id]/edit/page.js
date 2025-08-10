@@ -15,7 +15,8 @@ async function getUser(id) {
 }
 
 export default async function EditUserPage({ params }) {
-  const user = await getUser(params.id);
+  const { id } = await params;
+  const user = await getUser(id);
 
   return (
     <div className="space-y-6">
