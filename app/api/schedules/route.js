@@ -8,9 +8,6 @@ export const dynamic = "force-dynamic";
 // GET /api/schedules - Get all schedules
 export async function GET(request) {
   try {
-    // Test connection first
-    await prisma.$connect();
-
     const schedules = await prisma.schedule.findMany({
       orderBy: { startDate: "asc" },
       include: {
@@ -37,8 +34,6 @@ export async function GET(request) {
     }
 
     return handleApiError(error);
-  } finally {
-    await prisma.$disconnect();
   }
 }
 

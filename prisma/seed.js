@@ -6,6 +6,8 @@ const prisma = new PrismaClient();
 async function main() {
   console.log("🌱 Starting database seed...");
 
+  // seed user
+
   // Create admin user
   const hashedPassword = await bcrypt.hash("tuk123", 12);
   const adminUser = await prisma.user.upsert({
@@ -20,48 +22,52 @@ async function main() {
   });
   console.log("✅ Admin user created:", adminUser.email);
 
+  // Seed courses
+
   // Create courses
-  //   const courses = await Promise.all([
-  //     prisma.course.upsert({
-  //       where: { shortTitle: "OPPP" },
-  //       update: {},
-  //       create: {
-  //         title: "Operator Penyambungan Pipa Polyethylene",
-  //         shortTitle: "OPPP",
-  //         description:
-  //           "Pelatihan untuk operator yang bertanggung jawab dalam penyambungan pipa polyethylene",
-  //         duration: "3 Hari",
-  //         category: "penyambungan",
-  //         isActive: true,
-  //       },
-  //     }),
-  //     prisma.course.upsert({
-  //       where: { shortTitle: "ISPGB" },
-  //       update: {},
-  //       create: {
-  //         title: "Inspeksi Stasiun Penyaluran Gas Bumi",
-  //         shortTitle: "ISPGB",
-  //         description:
-  //           "Pelatihan inspeksi dan pemeliharaan stasiun penyaluran gas bumi",
-  //         duration: "3 Hari",
-  //         category: "inspeksi",
-  //         isActive: true,
-  //       },
-  //     }),
-  //     prisma.course.upsert({
-  //       where: { shortTitle: "FW" },
-  //       update: {},
-  //       create: {
-  //         title: "Floor Warden",
-  //         shortTitle: "FW",
-  //         description: "Pelatihan untuk petugas keselamatan dan evakuasi",
-  //         duration: "3 Hari",
-  //         category: "keselamatan",
-  //         isActive: true,
-  //       },
-  //     }),
-  //   ]);
-  //   console.log("✅ Courses created:", courses.length);
+  // const courses = await Promise.all([
+  //   prisma.course.upsert({
+  //     where: { shortTitle: "OPPP" },
+  //     update: {},
+  //     create: {
+  //       title: "Operator Penyambungan Pipa Polyethylene",
+  //       shortTitle: "OPPP",
+  //       description:
+  //         "Pelatihan untuk operator yang bertanggung jawab dalam penyambungan pipa polyethylene",
+  //       duration: "3 Hari",
+  //       category: "penyambungan",
+  //       isActive: true,
+  //     },
+  //   }),
+  //   prisma.course.upsert({
+  //     where: { shortTitle: "ISPGB" },
+  //     update: {},
+  //     create: {
+  //       title: "Inspeksi Stasiun Penyaluran Gas Bumi",
+  //       shortTitle: "ISPGB",
+  //       description:
+  //         "Pelatihan inspeksi dan pemeliharaan stasiun penyaluran gas bumi",
+  //       duration: "3 Hari",
+  //       category: "inspeksi",
+  //       isActive: true,
+  //     },
+  //   }),
+  //   prisma.course.upsert({
+  //     where: { shortTitle: "FW" },
+  //     update: {},
+  //     create: {
+  //       title: "Floor Warden",
+  //       shortTitle: "FW",
+  //       description: "Pelatihan untuk petugas keselamatan dan evakuasi",
+  //       duration: "3 Hari",
+  //       category: "keselamatan",
+  //       isActive: true,
+  //     },
+  //   }),
+  // ]);
+  // console.log("✅ Courses created:", courses.length);
+
+  // Seed schedules
 
   //   // Create schedules
   //   const schedules = await Promise.all([
@@ -110,6 +116,8 @@ async function main() {
   //   ]);
   //   console.log("✅ Schedules created:", schedules.length);
 
+  // Seed organizational structure
+
   //   // Create organizational structure (sequentially to handle parent-child relationships)
   //   const director = await prisma.organizationalStructure.upsert({
   //     where: { id: "director" },
@@ -139,6 +147,8 @@ async function main() {
   //     },
   //   });
   //   console.log("✅ Manager created:", manager.name);
+
+  // Seed supervisor
 
   //   const supervisor = await prisma.organizationalStructure.upsert({
   //     where: { id: "supervisor" },

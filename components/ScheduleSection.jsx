@@ -32,7 +32,7 @@ const ScheduleSection = () => {
         const schedulesData = await schedulesResponse.json();
         console.log("Schedules API Response:", schedulesData);
         const activeSchedules = schedulesData.data || [];
-        console.log("Active Schedules:", activeSchedules);
+        // console.log("Active Schedules:", activeSchedules);
         setSchedules(activeSchedules);
         setFilteredSchedules(activeSchedules);
       } else {
@@ -523,7 +523,7 @@ const ScheduleSection = () => {
         return (
           <Badge
             variant="secondary"
-            style={{ backgroundColor: "#F97316", color: "#FFFFFF" }}
+            style={{ backgroundColor: "#fcf400", color: "#FFFFFF" }}
           >
             Terbatas
           </Badge>
@@ -550,7 +550,7 @@ const ScheduleSection = () => {
         return (
           <Badge
             variant="destructive"
-            style={{ backgroundColor: "#DC2626", color: "#FFFFFF" }}
+            style={{ backgroundColor: "#fc7a006", color: "#FFFFFF" }}
           >
             Dibatalkan
           </Badge>

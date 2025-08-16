@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
+
 import AdminHeader from "@/components/admin/AdminHeader";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import prisma from "@/lib/db";
@@ -18,14 +19,9 @@ async function getAdminUser() {
       process.env.JWT_SECRET || "your-secret-key"
     );
 
-    // Test connection first
-    await prisma.$connect();
-
     const user = await prisma.user.findUnique({
       where: { id: decoded.id },
     });
-
-    await prisma.$disconnect();
 
     if (!user || user.role !== "ADMIN") {
       return null;
@@ -47,11 +43,6 @@ async function getAdminUser() {
     return null;
   }
 }
-
-export const metadata = {
-  title: "Admin Dashboard - TUK PGAS SOLUTION",
-  description: "Panel administrasi untuk TUK PGAS SOLUTION",
-};
 
 export default async function AdminLayout({ children }) {
   const user = await getAdminUser();

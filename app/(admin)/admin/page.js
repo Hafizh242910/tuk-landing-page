@@ -2,22 +2,12 @@ import prisma from "@/lib/db";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  Users,
-  BookOpen,
-  Calendar,
-  Building,
-  TrendingUp,
-  Plus,
-  Eye,
-} from "lucide-react";
+import { Users, BookOpen, Calendar, Building, Plus } from "lucide-react";
 import Link from "next/link";
-import DateText from "@/components/admin/DateText";
 
 async function getStats() {
   try {
     // Test connection first
-    await prisma.$connect();
 
     const [users, courses, schedules, structures] = await Promise.all([
       prisma.user.count(),
@@ -26,7 +16,6 @@ async function getStats() {
       prisma.organizationalStructure.count(),
     ]);
 
-    await prisma.$disconnect();
     return { users, courses, schedules, structures };
   } catch (error) {
     console.error("Stats API Error:", error);
@@ -46,7 +35,6 @@ async function getStats() {
 async function getRecentData() {
   try {
     // Test connection first
-    await prisma.$connect();
 
     const [recentUsers, recentCourses, recentSchedules] = await Promise.all([
       prisma.user.findMany({
@@ -64,7 +52,6 @@ async function getRecentData() {
       }),
     ]);
 
-    await prisma.$disconnect();
     return { recentUsers, recentCourses, recentSchedules };
   } catch (error) {
     console.error("Recent Data API Error:", error);

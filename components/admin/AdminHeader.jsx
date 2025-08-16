@@ -1,9 +1,8 @@
 "use client";
 
-import { Bell, Search, User } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Search, User } from "lucide-react";
 
-export default function AdminHeader({ user }) {
+const AdminHeader = ({ user }) => {
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-4">
       <div className="flex items-center justify-between">
@@ -32,4 +31,6 @@ export default function AdminHeader({ user }) {
       </div>
     </header>
   );
-}
+};
+
+export default AdminHeader;

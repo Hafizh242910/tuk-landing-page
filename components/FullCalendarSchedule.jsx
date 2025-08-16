@@ -36,7 +36,7 @@ const FullCalendarSchedule = ({ schedules = [] }) => {
         break;
       case "LIMITED":
         status = "Terbatas";
-        backgroundColor = "#F97316"; // Orange
+        backgroundColor = "#fcf400"; // Orange
         break;
       case "FULL":
         status = "Penuh";
@@ -48,7 +48,7 @@ const FullCalendarSchedule = ({ schedules = [] }) => {
         break;
       case "CANCELLED":
         status = "Dibatalkan";
-        backgroundColor = "#DC2626"; // Dark red
+        backgroundColor = "#fc7a00"; // Dark red
         break;
       default:
         // Fallback to calculated status based on availability
@@ -111,11 +111,7 @@ const FullCalendarSchedule = ({ schedules = [] }) => {
     events: events,
     eventClick: handleEventClick,
     eventDisplay: "block",
-    eventTimeFormat: {
-      hour: "2-digit",
-      minute: "2-digit",
-      meridiem: false,
-    },
+    displayEventTime: false,
     dayMaxEvents: true,
     moreLinkClick: "popover",
     eventDidMount: (info) => {
@@ -167,7 +163,7 @@ const FullCalendarSchedule = ({ schedules = [] }) => {
             <div className="flex items-center space-x-2">
               <div
                 className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: "#F97316" }}
+                style={{ backgroundColor: "#fcf400" }}
               ></div>
               <span className="text-sm text-gray-600">Terbatas</span>
             </div>
@@ -188,7 +184,7 @@ const FullCalendarSchedule = ({ schedules = [] }) => {
             <div className="flex items-center space-x-2">
               <div
                 className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: "#DC2626" }}
+                style={{ backgroundColor: "#fc7a00" }}
               ></div>
               <span className="text-sm text-gray-600">Dibatalkan</span>
             </div>

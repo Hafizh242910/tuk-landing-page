@@ -338,7 +338,7 @@ const AboutSeciton = () => {
               whileHover={{ x: 10 }}
             >
               <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6">
-                Profil Perusahaan
+                Profil TUK PGAS Training Center
               </h3>
               <div className="space-y-3 md:space-y-4 text-sm md:text-base text-gray-700 leading-relaxed">
                 <motion.p
@@ -377,7 +377,7 @@ const AboutSeciton = () => {
             >
               <div className="bg-blue-600 rounded-lg p-6 md:p-8 text-white">
                 <h4 className="text-xl md:text-2xl font-bold mb-3 md:mb-4">
-                  Lini Bisnis Utama
+                  Tujuan Utama
                 </h4>
                 <div className="space-y-3 md:space-y-4">
                   <ul className="list-disc list-outside space-y-2 md:space-y-3 pl-4">
@@ -506,13 +506,6 @@ const AboutSeciton = () => {
                       {structure.position}
                     </p>
                   </div>
-
-                  {/* Department */}
-                  {structure.department && (
-                    <div className="text-xs text-gray-500">
-                      {structure.department}
-                    </div>
-                  )}
                 </motion.div>
               ))}
             </motion.div>

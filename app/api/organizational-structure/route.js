@@ -9,7 +9,6 @@ export const dynamic = "force-dynamic";
 export async function GET(request) {
   try {
     // Test connection first
-    await prisma.$connect();
 
     const structures = await prisma.organizationalStructure.findMany({
       orderBy: { level: "asc" },
@@ -32,8 +31,6 @@ export async function GET(request) {
     }
 
     return handleApiError(error);
-  } finally {
-    await prisma.$disconnect();
   }
 }
 

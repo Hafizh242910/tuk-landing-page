@@ -387,24 +387,23 @@ const Footer = () => {
               © {currentYear} PGAS Training Center. All rights reserved.
             </motion.p>
             <motion.div className="flex space-x-6" variants={containerVariants}>
-              {[
-                { href: "/privacy", label: "Privacy Policy" },
-                { href: "/terms", label: "Terms of Service" },
-              ].map((link, index) => (
-                <motion.div
-                  key={link.label}
-                  variants={linkVariants}
-                  whileHover="hover"
-                  custom={index}
-                >
-                  <Link
-                    href={link.href}
-                    className="text-gray-400 hover:text-white text-sm transition-colors duration-200"
+              {[{ href: "/privacy-policy", label: "Privacy Policy" }].map(
+                (link, index) => (
+                  <motion.div
+                    key={link.label}
+                    variants={linkVariants}
+                    whileHover="hover"
+                    custom={index}
                   >
-                    {link.label}
-                  </Link>
-                </motion.div>
-              ))}
+                    <Link
+                      href={link.href}
+                      className="text-gray-400 hover:text-white text-sm transition-colors duration-200"
+                    >
+                      {link.label}
+                    </Link>
+                  </motion.div>
+                )
+              )}
             </motion.div>
           </div>
         </motion.div>

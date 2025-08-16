@@ -18,7 +18,6 @@ export default function OrgStructureForm({ structure = null }) {
   const [formData, setFormData] = useState({
     name: structure?.name || "",
     position: structure?.position || "",
-    department: structure?.department || "",
     level: structure?.level || 0,
     email: structure?.email || "",
     phone: structure?.phone || "",
@@ -234,31 +233,18 @@ export default function OrgStructureForm({ structure = null }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label htmlFor="department">Departemen</Label>
-              <Input
-                id="department"
-                name="department"
-                value={formData.department}
-                onChange={handleChange}
-                placeholder="Departemen"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="level">Level *</Label>
-              <Input
-                id="level"
-                name="level"
-                type="number"
-                value={formData.level}
-                onChange={handleChange}
-                placeholder="0"
-                min="0"
-                required
-              />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="level">Level *</Label>
+            <Input
+              id="level"
+              name="level"
+              type="number"
+              value={formData.level}
+              onChange={handleChange}
+              placeholder="0"
+              min="0"
+              required
+            />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
